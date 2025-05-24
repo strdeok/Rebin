@@ -19,7 +19,7 @@ export const scanQRCode = (navigate: NavigateFunction): Promise<string> => {
             navigate("/auth-completed");
           });
         },
-        (errorMessage) => {}
+        () => {}
       )
       .catch((err) => {
         reject(err);

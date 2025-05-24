@@ -13,7 +13,7 @@ import Favorites from "./pages/afterLogin/mypage/favorites/favorites";
 import PaymentHistory from "./pages/afterLogin/mypage/paymentHistory/paymentHistory";
 import TrashHistory from "./pages/afterLogin/mypage/trashHistory/trashHistory";
 import ScrollTop from "./util/scrollTop";
-import Store from "./pages/afterLogin/store/Store";
+import Store from "./pages/afterLogin/store/store";
 
 function App() {
   return (
