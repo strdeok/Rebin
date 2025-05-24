@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-// import OutlineHeart from "../../../../assets/icons/OutlineHeart.svg?react";
+import OutlineHeart from "../../../../assets/icons/OutlineHeart.svg?react";
 import FillHeart from "../../../../assets/icons/FillHeart.svg?react";
 import axios from "axios";
 
@@ -12,7 +12,7 @@ interface StoreType {
 export default function Favorites() {
   const [category, setCategory] = useState("전체보기");
   const [favorites, setFavorites] = useState<StoreType[]>([]);
-
+  const [like, setLike] = useState<boolean>(true);
   useEffect(() => {
     setTimeout(() => {
       axios.get("/api/favorites").then((res) => {
@@ -24,7 +24,8 @@ export default function Favorites() {
   const filterFavorites = (category: string) => {
     if (category === "전체보기") {
       return favorites;
-    } else return favorites.filter((favorite) => favorite.category === category);
+    } else
+      return favorites.filter((favorite) => favorite.category === category);
   };
 
   const Container = ({ store }: { store: StoreType }) => {
@@ -41,8 +42,12 @@ export default function Favorites() {
         </div>
 
         <div className="flex flex-col h-full items-end gap-4">
-          <button>
-            <FillHeart />
+          <button
+            onClick={() => {
+              setLike(!like);
+            }}
+          >
+            {like ? <FillHeart /> : <OutlineHeart />}
           </button>
           <button className="bg-[#007aff] text-white  rounded-lg py-2 px-4">
             길찾기 시작
