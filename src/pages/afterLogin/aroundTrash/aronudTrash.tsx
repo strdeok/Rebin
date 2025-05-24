@@ -1,8 +1,8 @@
 import OutlineHeart from "../../../assets/icons/OutlineHeart.svg?react";
-import FillHeart from "../../../assets/icons/FillHeart.svg?react";
+// import FillHeart from "../../../assets/icons/FillHeart.svg?react";
 import Battery from "../../../assets/icons/Battery.svg?react";
-import Bottle from "../../../assets/icons/Bottle.svg?react";
-import Pill from "../../../assets/icons/Pill.svg?react";
+// import Bottle from "../../../assets/icons/Bottle.svg?react";
+// import Pill from "../../../assets/icons/Pill.svg?react";
 
 const Container = () => {
   return (
