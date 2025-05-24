@@ -26,7 +26,7 @@ export default function Mypage() {
       {isWithdrawModalOpen && (
         <WithdrawModal setIsWithdrawModalOpen={setIsWithdrawModalOpen} />
       )}
-      <div className="px-4 pt-2 pb-6 bg-[#F9F9F9] flex flex-col items-center gap-4">
+      <div className="px-4 pt-2 bg-[#F9F9F9] flex flex-col items-center gap-4 pb-20">
         {/* 첫번째 섹션 */}
         <div
           id="user"
