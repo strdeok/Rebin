@@ -13,7 +13,7 @@ export default function Store() {
     );
   };
   return (
-    <div className="text-xl font-medium ">
+    <div className="text-xl font-medium pb-20">
       <div className="py-8 pl-4 pr-8 flex justify-between border-b-2">
         닉네임님의 현재 포인트{" "}
         <span className="font-semibold text-[#19824F]">5,000pt</span>
