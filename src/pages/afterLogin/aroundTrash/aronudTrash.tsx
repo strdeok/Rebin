@@ -5,7 +5,9 @@ import Bottle from "../../../assets/icons/Bottle.svg?react";
 import Pill from "../../../assets/icons/Pill.svg?react";
 
 const Container = () => {
-  const _icons = [FillHeart , Pill , Bottle]
+  const icons = [FillHeart , Pill , Bottle]
+  console.log(icons)
+
   return (
     <div className="flex flex-row items-center w-full h-24 px-4">
       <Battery fill="black" />
