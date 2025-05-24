@@ -2,7 +2,7 @@ import { APIProvider, Map } from "@vis.gl/react-google-maps";
 import Markers from "./customMarker";
 import ClusteredMarkers from "./markerCluster";
 import UserMarker from "./userMarker";
-// import useGetNowLocation from "../../../../../util/getNowLocation";
+import useGetNowLocation from "../../../../../util/getNowLocation";
 import type { Dispatch, SetStateAction } from "react";
 import type { Poi } from "../../../../../type/poi";
 import MapCenter from "./mapCenterFunction";
@@ -56,13 +56,14 @@ export default function GoogleMap({
   setIsCenter: Dispatch<SetStateAction<boolean>>;
   showPath: boolean;
 }) {
-  // const location = useGetNowLocation(); // 실제 위치 가져오기\
+  const location = useGetNowLocation(); // 실제 위치 가져오기
   const userLocation = {
     lat: 37.38696794167395,
     lng: 126.63989992959323,
   };
  const { selectedCategory } = useCategory();
  
+ console.log(location)
 
   const filteredLocations =
     selectedCategory === "whole"
