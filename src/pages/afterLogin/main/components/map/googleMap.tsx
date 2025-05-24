@@ -2,7 +2,7 @@ import { APIProvider, Map } from "@vis.gl/react-google-maps";
 import Markers from "./customMarker";
 import ClusteredMarkers from "./markerCluster";
 import UserMarker from "./userMarker";
-import useGetNowLocation from "../../../../../util/getNowLocation";
+// import useGetNowLocation from "../../../../../util/getNowLocation";
 import type { Dispatch, SetStateAction } from "react";
 import type { Poi } from "../../../../../type/poi";
 import MapCenter from "./mapCenterFunction";
