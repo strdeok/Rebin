@@ -74,7 +74,7 @@ export default function Markers({
             <div className="relative">
               <img
                 id={poi.name}
-                className={isSelected ? "w-28" : "w-20"}
+                className={isSelected ? "w-20" : "w-16"}
                 src={isLiked ? "/images/LikedMarker.png" : "/images/Marker.png"}
                 alt="marker"
               />
