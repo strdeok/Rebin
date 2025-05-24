@@ -56,7 +56,9 @@ export default function GoogleMap({
   setIsCenter: Dispatch<SetStateAction<boolean>>;
   showPath: boolean;
 }) {
-  const _location = useGetNowLocation(); // 실제 위치 가져오기
+  const location = useGetNowLocation(); // 실제 위치 가져오기
+  console.log(location);
+
   const userLocation = {
     lat: 37.38696794167395,
     lng: 126.63989992959323,
