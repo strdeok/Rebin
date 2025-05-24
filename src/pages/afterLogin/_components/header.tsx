@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import Bell from "../../../assets/icons/bell.svg?react";
+import Bell from "../../../assets/icons/Bell.svg?react";
 import Previous from "../../../assets/icons/Previous.svg?react";
 
 export default function Header() {
