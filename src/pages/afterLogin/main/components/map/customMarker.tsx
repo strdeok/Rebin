@@ -55,8 +55,10 @@ export default function Markers({
       google.maps.event.removeListener(listener);
     };
   }, [map]);
-
-  if (zoom !== undefined && zoom <= 15) return null; // 줌 나가면 없앰
+  
+  if (!showPath) {
+    if (zoom !== undefined && zoom <= 15) return null; // 줌 나가면 없앰
+  }
 
   return (
     <>
