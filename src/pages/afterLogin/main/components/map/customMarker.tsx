@@ -24,6 +24,7 @@ export default function Markers({
   setIsInfoVisible,
   likeLocation,
   setSelectedLocation,
+  showPath,
 }: {
   pois: Poi[];
   selectedLocation: Poi;
@@ -31,6 +32,7 @@ export default function Markers({
   setIsInfoVisible: Dispatch<SetStateAction<boolean>>;
   likeLocation: { name: string; location: object; category: string }[];
   setSelectedLocation: Dispatch<SetStateAction<Poi>>;
+  showPath: boolean;
 }) {
   const [zoom, setZoom] = useState<number | undefined>();
   const map = useMap();
@@ -58,8 +60,11 @@ export default function Markers({
 
   return (
     <>
-      {pois.map((poi: Poi, i: number) => {
-        const isLiked = likeLocation.some((item) => item.name === poi.name); // 배열 안에 특정 조건을 만족하는 요소가 "하나라도" 있는지
+      {(showPath
+        ? pois.filter((poi) => poi.name === selectedLocation.name)
+        : pois
+      ).map((poi: Poi, i: number) => {
+        const isLiked = likeLocation.some((item) => item.name === poi.name);
         const isSelected = selectedLocation?.name === poi.name && isInfoVisible;
 
         return (

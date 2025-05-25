@@ -102,6 +102,7 @@ export default function GoogleMap({
         setIsInfoVisible={setIsInfoVisible}
         likeLocation={likeLocation}
         setSelectedLocation={setSelectedLocation}
+        showPath={showPath}
       />
     </APIProvider>
   );
