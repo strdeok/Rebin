@@ -94,7 +94,7 @@ export default function GoogleMap({
         {showPath && <Polyline />}
       </Map>
       <UserMarker userLocation={userLocation} />
-      <ClusteredMarkers pois={filteredLocations} />
+     {showPath !== true && <ClusteredMarkers pois={filteredLocations} />}
       <Markers
         pois={filteredLocations}
         selectedLocation={selectedLocation}
