@@ -14,7 +14,7 @@ export default function ChatPage() {
   }, [questions]);
 
   return (
-    <div className="h-auto flex flex-col relative">
+    <div className="h-auto flex flex-col relative pb-20">
       <div className="flex flex-col flex-1 overflow-y-auto px-4 pt-2 pb-12 gap-2">
         <div className="self-start">
           <AdminChat question={null} />
