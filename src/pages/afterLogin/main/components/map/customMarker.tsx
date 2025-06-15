@@ -9,7 +9,7 @@ import Bottle from "../../../../../assets/icons/Bottle.svg?react";
 import Battery from "../../../../../assets/icons/Battery.svg?react";
 import Pill from "../../../../../assets/icons/Pill.svg?react";
 import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
-import type { Poi } from "../../../../../type/poi";
+import type { Poi } from "../../../../../types/poi";
 
 const categoryIcons: Record<string, JSX.Element> = {
   battery: <Battery fill="white" />,
@@ -27,11 +27,11 @@ export default function Markers({
   showPath,
 }: {
   pois: Poi[];
-  selectedLocation: Poi;
+  selectedLocation: Poi | null;
+  setSelectedLocation: Dispatch<SetStateAction<Poi | null>>;
   isInfoVisible: boolean;
   setIsInfoVisible: Dispatch<SetStateAction<boolean>>;
-  likeLocation: { name: string; location: object; category: string }[];
-  setSelectedLocation: Dispatch<SetStateAction<Poi>>;
+  likeLocation: Poi[] | undefined;
   showPath: boolean;
 }) {
   const [zoom, setZoom] = useState<number | undefined>();
@@ -55,7 +55,7 @@ export default function Markers({
       google.maps.event.removeListener(listener);
     };
   }, [map]);
-  
+
   if (!showPath) {
     if (zoom !== undefined && zoom <= 15) return null; // 줌 나가면 없앰
   }
@@ -63,10 +63,10 @@ export default function Markers({
   return (
     <>
       {(showPath
-        ? pois.filter((poi) => poi.name === selectedLocation.name)
+        ? pois.filter((poi) => poi.name === selectedLocation?.name)
         : pois
       ).map((poi: Poi, i: number) => {
-        const isLiked = likeLocation.some((item) => item.name === poi.name);
+        const isLiked = likeLocation?.some((item) => item.name === poi.name);
         const isSelected = selectedLocation?.name === poi.name && isInfoVisible;
 
         return (
