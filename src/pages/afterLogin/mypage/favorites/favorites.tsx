@@ -80,8 +80,8 @@ export default function Favorites() {
   return (
     <>
       <div className="flex flex-row items-center justify-center gap-4 w-full mt-4">
-        {["전체보기", "폐의약품", "폐건전지", "공병"].map((label, index) => {
-          return (
+        {["전체보기", "폐의약품", "공병"].map((label, index) => {
+          return (  
             <button
               className={`w-18 h-9 rounded-lg ${
                 category === label && "bg-[#19824F] text-white "
