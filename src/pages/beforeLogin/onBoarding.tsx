@@ -21,7 +21,7 @@ export default function OnBoarding() {
       <button
         className="mt-18 bg-[#19824F] h-16 flex flex-row items-center justify-center rounded-lg  text-white text-xl"
         onClick={() => {
-          signIn();
+          signIn()
         }}
       >
         <Google className="mr-2" /> 로그인

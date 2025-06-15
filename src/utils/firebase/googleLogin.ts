@@ -1,10 +1,9 @@
-// utils/firebase/googleLogin.ts
 import {
   getAuth,
+  signInWithPopup,
   GoogleAuthProvider,
   setPersistence,
   browserSessionPersistence,
-  signInWithRedirect,
 } from "firebase/auth";
 import { app } from "../../../firebase";
 
@@ -15,9 +14,9 @@ export default async function signIn() {
 
   try {
     await setPersistence(auth, browserSessionPersistence);
-    await signInWithRedirect(auth, provider);
-  } catch (error) {
-    console.error("리디렉션 로그인 실패:", error);
-    throw error;
+    const result = signInWithPopup(auth, provider);
+    return await result;
+  } catch {
+    return "error";
   }
 }
