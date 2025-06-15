@@ -20,7 +20,7 @@ export default function SelectSection({
   };
 
   return (
-    <div id="bounds" className="w-full h-86 fixed -bottom-20">
+    <div id="bounds" className="w-full max-w-md h-86 fixed -bottom-20">
       <Draggable
         axis="y"
         handle="#handle"
