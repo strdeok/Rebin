@@ -7,7 +7,6 @@ import MainLayout from "./pages/afterLogin/mainLayout";
 import AroundTrash from "./pages/afterLogin/aroundTrash/aronudTrash";
 import ChatPage from "./pages/afterLogin/chat-bot/chatPage";
 import Favorites from "./pages/afterLogin/mypage/favorites/favorites";
-import TrashHistory from "./pages/afterLogin/mypage/trashHistory/trashHistory";
 import ScrollTop from "./utils/scrollTop";
 import SetUserInfo from "./pages/beforeLogin/login/setUserInfo";
 
@@ -28,7 +27,6 @@ function App() {
 
           {/* 마이페이지 하위 페이지 */}
           <Route path="/mypage/favorites" element={<Favorites />} />
-          <Route path="/mypage/trash-history" element={<TrashHistory />} />
         </Route>
       </Routes>
     </BrowserRouter>
