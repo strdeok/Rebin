@@ -1,21 +1,41 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import siginIn from "../../../utils/firebase/googleLogin";
-import { getAdditionalUserInfo, type UserCredential } from "firebase/auth";
+import {
+  getRedirectResult,
+  getAuth,
+  type UserCredential,
+  getAdditionalUserInfo,
+} from "firebase/auth";
+import signIn from "../../../utils/firebase/googleLogin";
 
 export default function Login() {
   const navigate = useNavigate();
+
   useEffect(() => {
-    siginIn()
-      .then((res) => {
-        const userInfo = getAdditionalUserInfo(res as UserCredential);
-        userInfo?.isNewUser ? navigate("/signup") : navigate("/main");
-      })
-      .catch((err) => {
-        console.log(err)
-        alert("로그인에 문제가 발생하였습니다. 다시 시도해주세요.");
+    const handleLogin = async () => {
+      const auth = getAuth();
+
+      try {
+        const result = await getRedirectResult(auth);
+
+        if (result) {
+          const userInfo = getAdditionalUserInfo(result as UserCredential);
+          if (userInfo?.isNewUser) {
+            navigate("/signup");
+          } else {
+            navigate("/main");
+          }
+        } else {
+          await signIn();
+        }
+      } catch (err) {
+        console.error("로그인 에러:", err);
+        alert("로그인에 실패했습니다. 다시 시도해주세요.");
         navigate("/");
-      });
+      }
+    };
+
+    handleLogin();
   }, []);
 
   return (
