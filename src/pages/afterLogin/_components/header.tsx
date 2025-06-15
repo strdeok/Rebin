@@ -6,7 +6,7 @@ export default function Header() {
   const navigate = useNavigate();
   const pathname = useLocation().pathname;
   return (
-    <div className="fixed top-0 bg-white z-30 w-full h-12 text-center px-2 flex items-center justify-between border-b border-[#D9D9D9]">
+    <div className="fixed max-w-[440px] top-0 bg-white z-30 w-full h-12 text-center px-2 flex items-center justify-between border-b border-[#D9D9D9]">
       <button
       className="w-6"
         onClick={() => {

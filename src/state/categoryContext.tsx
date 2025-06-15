@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import type { CategoryType } from "../type/categoryType";
+import type { CategoryType } from "../types/categoryType";
 
 interface CategoryContextType {
   selectedCategory: CategoryType;

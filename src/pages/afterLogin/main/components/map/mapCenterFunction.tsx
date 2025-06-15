@@ -10,7 +10,7 @@ export default function MapCenter({
   location: google.maps.LatLngLiteral;
   setIsCenter: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const map = useMap(); // ✅ vis.gl 제공 훅
+  const map = useMap();
 
   // 지도 중심 이동
   useEffect(() => {
