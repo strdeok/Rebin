@@ -1,23 +1,22 @@
-import axios from "axios";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import User from "../../../../assets/icons/User.svg?react";
+import { changeNickName } from "../../../../api/changeNickName";
 
 export default function EditNickName() {
   const [warning, setWarning] = useState<"safe" | "already" | "empty">("safe");
   const nicknameRef = useRef("");
   const navigate = useNavigate();
 
-  const modifyingNickName = () => {
-    axios
-      .put("/api/nickname", {
-        username: nicknameRef.current,
-      })
+  const putChangeNickName = () => {
+    changeNickName(nicknameRef.current)
       .then((res) => {
-        if (res.data.success === true) {
+        if (res.success === true) {
           setTimeout(() => {
             navigate("/mypage");
           }, 3000);
+        } else {
+          setWarning("already");
         }
       })
       .catch((err) => {
@@ -46,11 +45,15 @@ export default function EditNickName() {
               nicknameRef.current = e.target.value.trim();
             }}
           />
-          {warning === "empty" && (
+          {warning === "empty" ? (
             <p className="text-red-600 ml-4 mt-2 text-xs">
               닉네임을 입력해주세요.
             </p>
-          )}
+          ) : warning === "already" ? (
+            <p className="text-red-600 ml-4 mt-2 text-xs">
+              이미 존재하는 닉네임입니다.
+            </p>
+          ) : null}
         </div>
       </div>
 
@@ -60,9 +63,8 @@ export default function EditNickName() {
           if (nicknameRef.current === "") {
             setWarning("empty");
           } else {
-            modifyingNickName();
+            putChangeNickName();
           }
-          //   TODO: 중복체크
         }}
       >
         수정하기
