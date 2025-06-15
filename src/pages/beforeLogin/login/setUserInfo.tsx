@@ -111,15 +111,13 @@ export default function SetUserInfo() {
 
           <strong>1. 수집 항목</strong>
           <ul>
-            <li>이름, 이메일 주소, 프로필 사진 (Google 로그인 시 자동 수집)</li>
-            <li>포인트 교환 시: 수령자 이름, 연락처</li>
+            <li>이름, 이메일 주소(Google 로그인 시 자동 수집)</li>
           </ul>
 
           <strong>2. 이용 목적</strong>
           <ul>
             <li>회원 식별 및 서비스 제공</li>
-            <li>포인트 적립 및 상품권 교환</li>
-            <li>상품권 발송 및 고객 문의 응대</li>
+            <li>고객 문의 응대</li>
           </ul>
 
           <strong>3. 보유 기간</strong>
