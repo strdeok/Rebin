@@ -73,7 +73,10 @@ export default function Mypage() {
             <Heart className="ml-4" />
             <span className="ml-5">내가 찜한 가게 확인하기</span>
           </button>
-          <button id="서비스" className="flex items-center py-2 h-1/2">
+          <button id="서비스" className="flex items-center py-2 h-1/2"
+          onClick={()=>{
+            window.open("https://open.kakao.com/o/sEsZl0Bh")
+          }}>
             <CustomerService className="ml-4" />
             <span className="ml-5">1대1 문의 / 리뷰 남기기</span>
           </button>
