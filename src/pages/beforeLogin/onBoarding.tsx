@@ -3,7 +3,7 @@ import Google from "../../assets/icons/Google.svg?react";
 import signIn from "../../utils/firebase/googleLogin";
 
 export default function OnBoarding() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col px-8 font-semibold">
       <div className="mt-12 ml-4">
@@ -23,9 +23,8 @@ export default function OnBoarding() {
       <button
         className="mt-18 bg-[#19824F] h-16 flex flex-row items-center justify-center rounded-lg  text-white text-xl"
         onClick={() => {
-          signIn().then(()=>{
-            navigate('/login')
-          })
+          signIn();
+          navigate("/login");
         }}
       >
         <Google className="mr-2" /> 로그인

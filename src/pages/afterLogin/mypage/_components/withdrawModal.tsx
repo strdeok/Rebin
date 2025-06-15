@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
-import { withdrawalUser } from "../../../../utils/firebase/deleteUser";
+import { withdrawalUser } from "../../../../utils/firebase/withdrawalUser";
 import { useNavigate } from "react-router-dom";
 
 export default function WithdrawModal({
