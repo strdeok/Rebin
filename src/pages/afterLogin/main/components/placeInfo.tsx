@@ -1,10 +1,16 @@
 import { motion } from "framer-motion";
-import type { Dispatch, SetStateAction } from "react";
-import type { Poi } from "../../../../type/poi";
+import { useEffect, useState, type Dispatch } from "react";
+import type { Poi } from "../../../../types/poi";
 import OutlineHeart from "../../../../assets/icons/OutlineHeart.svg?react";
 import FilledHeart from "../../../../assets/icons/FillHeart.svg?react";
+import {
+  addLikeLocation,
+  removeLikeLocation,
+} from "../../../../utils/firebase/manageLikeLocations";
+import { getWalkingDistance } from "../../../../api/getWalkingTimeDistance";
 
 export default function PlaceInfo({
+  like,
   setLike,
   likeLocation,
   setLikeLocation,
@@ -12,20 +18,45 @@ export default function PlaceInfo({
   selectedLocation,
   showPath,
   setShowPath,
-  setActiveModal,
+  userLocation,
 }: {
+  like: boolean;
   setLike: Dispatch<React.SetStateAction<boolean>>;
-  likeLocation: { name: string; location: object; category: string }[];
-  setLikeLocation: Dispatch<
-    SetStateAction<{ name: string; location: object; category: string }[]>
-  >;
+  likeLocation: Poi[];
+  setLikeLocation: Dispatch<React.SetStateAction<Poi[]>>;
   isInfoVisible: boolean;
-  selectedLocation: Poi;
+  selectedLocation: Poi | null;
   showPath: boolean;
   setShowPath: Dispatch<React.SetStateAction<boolean>>;
-  setActiveModal: Dispatch<React.SetStateAction<boolean>>;
+  userLocation: { lat: number; lng: number };
 }) {
-  const likeLocationNames = likeLocation.map((item) => item.name);
+  const likeLocationNames = likeLocation.map((item) => item);
+  const [routeInfo, setRouteInfo] = useState<{
+    distance: number;
+    duration: number;
+  } | null>(null);
+
+  useEffect(() => {
+    if (!selectedLocation) return;
+    const info = async () => {
+      try {
+        const result = await getWalkingDistance(
+          [userLocation.lng, userLocation.lat],
+          [selectedLocation?.location.lng, selectedLocation?.location.lat]
+        );
+        const data = result.routes[0].summary;
+        console.log(data);
+        setRouteInfo({
+          distance: data.distance,
+          duration: data.duration,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    info();
+  }, [selectedLocation?.name]);
 
   if (isInfoVisible) {
     return (
@@ -35,13 +66,15 @@ export default function PlaceInfo({
         transition={{ duration: 0.1 }}
         className="absolute bottom-0 z-50 right-0 w-full h-64 bg-white rounded-[32px_32px_0px_0px] overflow-hidden shadow-md"
       >
-        {likeLocationNames.find((item) => item === selectedLocation.name) ? (
+        {likeLocationNames.find((item) => item.name === selectedLocation?.name) ||
+        like ? (
           <FilledHeart
             fill="red"
             className="absolute w-9 h-9 top-[30px] right-8"
             onClick={() => {
+              removeLikeLocation(selectedLocation?.name);
               const filteredLocations = likeLocation.filter(
-                (item) => item.name !== selectedLocation.name
+                (item) => item.name !== selectedLocation?.name
               );
               setLikeLocation(filteredLocations);
             }}
@@ -51,38 +84,29 @@ export default function PlaceInfo({
             className="absolute w-9 h-9 top-[30px] right-8"
             onClick={() => {
               setLike(true);
-              setLikeLocation((prev) => [...prev, selectedLocation]);
+              addLikeLocation(selectedLocation!);
             }}
           />
         )}
 
-        <div className="mt-8 ml-11  font-semibold text-black text-2xl ">
-          {selectedLocation.name}
+        <div className="mt-8 ml-11  font-semibold text-black text-2xl w-65">
+          {selectedLocation?.name}
           <span className="font-normal text-[#7d8c8b] text-base tracking-[0] leading-[normal] whitespace-nowrap ml-2">
-            00.00km (약 12분)
+            {routeInfo?.distance?.toFixed(0)}m (약{" "}
+            {((routeInfo?.duration ?? 0) / 60).toFixed(0)}분)
           </span>
         </div>
 
         <div className="mt-4 ml-11 font-normal">
           영업시간
           <br />
-          09:00 ~ 18:00
+          {selectedLocation?.time}
         </div>
         <div className="w-full justify-around text-white mt-12 flex flex-row">
           {!showPath ? (
             <>
               <button
-                id="reader"
-                className="bg-[#0087ff] w-36 h-14 top rounded-lg"
-                onClick={() => {
-                  setActiveModal(true);
-                }}
-              >
-                QR 인증하기
-              </button>
-
-              <button
-                className="bg-[#19824f] w-36 h-14 rounded-lg"
+                className="bg-[#19824f] w-full mx-4 h-14 rounded-lg"
                 onClick={() => {
                   setShowPath(true);
                 }}
@@ -93,21 +117,12 @@ export default function PlaceInfo({
           ) : (
             <>
               <button
-                className="bg-[#D92B04] w-36 h-14 top rounded-lg"
+                className="bg-[#D92B04] w-full mx-4 h-14 top rounded-lg"
                 onClick={() => {
                   setShowPath(false);
                 }}
               >
                 길찾기 종료
-              </button>
-
-              <button
-                className="bg-[#0088FF] w-36 h-14 rounded-lg"
-                onClick={() => {
-                  setActiveModal(true);
-                }}
-              >
-                QR 인증하기
               </button>
             </>
           )}

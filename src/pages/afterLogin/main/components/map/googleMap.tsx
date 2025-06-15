@@ -2,40 +2,22 @@ import { APIProvider, Map } from "@vis.gl/react-google-maps";
 import Markers from "./customMarker";
 import ClusteredMarkers from "./markerCluster";
 import UserMarker from "./userMarker";
-import useGetNowLocation from "../../../../../util/getNowLocation";
-import type { Dispatch, SetStateAction } from "react";
-import type { Poi } from "../../../../../type/poi";
+import useGetNowLocation from "../../../../../utils/getNowLocation";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import type { Poi } from "../../../../../types/poi";
 import MapCenter from "./mapCenterFunction";
 import Polyline from "./mapPolyline";
 import { useCategory } from "../../../../../state/categoryContext";
+import GetPillLocation from "../../../../../api/getPillLocations";
 
 // https://visgl.github.io/react-google-maps/examples/directions : 오피셜 사이트
 
-export const locations: Poi[] = [
-  {
-    name: "대한뒷고기",
-    location: { lat: 37.38501415202262, lng: 126.64185143053245 },
-    category: "battery",
-  },
-  {
-    name: "스타벅스",
-    location: { lat: 37.38461116774087, lng: 126.64118149998412 },
-    category: "bottle",
-  },  {
-    name: "차이홍",
-    location: { lat:  37.38753152837655, lng:  126.64451565765982 },
-    category: "bottle",
-  },  {
-    name: "송도캐슬파크",
-    location: { lat:  37.38522499895747, lng: 126.64155684493942 },
-    category: "bottle",
-  },
-  {
-    name: "송도퍼스트 내과의원",
-    location: { lat: 37.38403157650678, lng: 126.64167529076617 },
-    category: "pill",
-  },
-];
+const SongDoBounds = {
+  north: 37.427025044166236,
+  south: 37.3411119498197,
+  west: 126.58951155157007,
+  east: 126.69771587807054,
+};
 
 export default function GoogleMap({
   isCenter,
@@ -46,64 +28,111 @@ export default function GoogleMap({
   setSelectedLocation,
   setIsCenter,
   showPath,
+  showLikedOnly,
 }: {
   isCenter: boolean;
-  selectedLocation: Poi;
+  selectedLocation: Poi | null;
+  setSelectedLocation: Dispatch<SetStateAction<Poi | null>>;
   isInfoVisible: boolean;
   setIsInfoVisible: Dispatch<SetStateAction<boolean>>;
-  likeLocation: { name: string; location: object; category: string }[];
-  setSelectedLocation: Dispatch<SetStateAction<Poi>>;
+  likeLocation: Poi[];
   setIsCenter: Dispatch<SetStateAction<boolean>>;
   showPath: boolean;
+  showLikedOnly: boolean;
 }) {
-  const location = useGetNowLocation(); // 실제 위치 가져오기
-  console.log(location);
+  const userLocation = useGetNowLocation(); // 실제 위치 가져오기
+  const [locations, setLocations] = useState<Poi[]>([]);
+  const [isInBoundary, setIsInBoundary] = useState(true);
 
-  const userLocation = {
-    lat: 37.38696794167395,
-    lng: 126.63989992959323,
-  };
- const { selectedCategory } = useCategory();
- 
+  const { selectedCategory } = useCategory();
 
   const filteredLocations =
     selectedCategory === "whole"
       ? locations
       : locations.filter((loc) => loc.category === selectedCategory);
 
-  return (
-    <APIProvider
-      apiKey={import.meta.env.VITE_PUBLIC_MAP_KEY}
-      libraries={["marker"]}
-    >
-      <Map
-        mapId={import.meta.env.VITE_PUBLIC_MAP_ID}
-        style={{ width: "100vw", height: "100%" }}
-        defaultCenter={userLocation || { lat: 37.386196, lng: 126.639404 }}
-        defaultZoom={17}
-        gestureHandling="greedy"
-        disableDefaultUI
-        onClick={() => setIsInfoVisible(false)}
-        onDrag={() => setIsCenter(false)}
+  const displayPois = showLikedOnly ? likeLocation ?? [] : filteredLocations;
+
+  useEffect(() => {
+    setLocations(GetPillLocation() as Poi[]);
+  }, []);
+
+  useEffect(() => {
+    const isOutOfBounds =
+      userLocation.lat > SongDoBounds.north ||
+      userLocation.lat < SongDoBounds.south ||
+      userLocation.lng < SongDoBounds.west ||
+      userLocation.lng > SongDoBounds.east;
+
+    if (isOutOfBounds) {
+      setIsInBoundary(false);
+    } else {
+      setIsInBoundary(true);
+    }
+  }, [userLocation]);
+
+  if (!isInBoundary) {
+    return (
+      <div className="bg-gray-500 h-full flex flex-col items-center justify-center text-white">
+        <p>서비스 지역을 벗어났습니다.</p>
+        <p>송도 지역으로 진입하시면 정상적으로 이용하실 수 있습니다.</p>
+      </div>
+    )
+  } else {
+    return (
+      <APIProvider
+        apiKey={import.meta.env.VITE_PUBLIC_MAP_KEY}
+        libraries={["marker"]}
       >
-        <MapCenter
-          isCenter={isCenter}
-          location={userLocation}
-          setIsCenter={setIsCenter}
+        <Map
+          mapId={import.meta.env.VITE_PUBLIC_MAP_ID}
+          style={{ width: "100%", height: "100%" }}
+          defaultCenter={userLocation || { lat: 37.386196, lng: 126.639404 }}
+          defaultZoom={17}
+          gestureHandling="greedy"
+          disableDefaultUI
+          onClick={() => setIsInfoVisible(false)}
+          onDrag={() => setIsCenter(false)}
+          restriction={{
+            latLngBounds: SongDoBounds,
+            strictBounds: false,
+          }}
+        >
+          <MapCenter
+            isCenter={isCenter}
+            location={userLocation}
+            setIsCenter={setIsCenter}
+          />
+
+          {showPath && (
+            <Polyline
+              origin={userLocation}
+              destination={selectedLocation}
+              showPath={showPath}
+            />
+          )}
+        </Map>
+
+        <UserMarker userLocation={userLocation} />
+
+        {showPath !== true && (
+          <ClusteredMarkers
+            pois={displayPois}
+            setSelectedLocation={setSelectedLocation}
+            setIsInfoVisible={setIsInfoVisible}
+          />
+        )}
+
+        <Markers
+          pois={displayPois}
+          selectedLocation={selectedLocation}
+          isInfoVisible={isInfoVisible}
+          setIsInfoVisible={setIsInfoVisible}
+          likeLocation={likeLocation}
+          setSelectedLocation={setSelectedLocation}
+          showPath={showPath}
         />
-        {showPath && <Polyline />}
-      </Map>
-      <UserMarker userLocation={userLocation} />
-     {showPath !== true && <ClusteredMarkers pois={filteredLocations} />}
-      <Markers
-        pois={filteredLocations}
-        selectedLocation={selectedLocation}
-        isInfoVisible={isInfoVisible}
-        setIsInfoVisible={setIsInfoVisible}
-        likeLocation={likeLocation}
-        setSelectedLocation={setSelectedLocation}
-        showPath={showPath}
-      />
-    </APIProvider>
-  );
+      </APIProvider>
+    );
+  }
 }

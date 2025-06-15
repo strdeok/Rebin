@@ -1,13 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState, type Dispatch } from "react";
+import { useEffect, useState } from "react";
 
-export default function LikeBanner({
-  like,
-  setLike,
-}: {
-  like: boolean;
-  setLike: Dispatch<React.SetStateAction<boolean>>;
-}) {
+export default function LikeBanner({ like }: { like: boolean }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -15,7 +9,6 @@ export default function LikeBanner({
       setVisible(true);
       const timer = setTimeout(() => {
         setVisible(false);
-        setLike(false);
       }, 1500); // 1.5초 뒤 사라지기
       return () => clearTimeout(timer);
     }

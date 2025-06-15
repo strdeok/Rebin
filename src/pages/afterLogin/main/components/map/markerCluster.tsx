@@ -1,8 +1,8 @@
-import { useEffect, type JSX } from "react";
+import { useEffect, type Dispatch, type JSX, type SetStateAction } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { customClusterRenderer } from "./customMarkerClusterer";
-import type { Poi } from "../../../../../type/poi";
+import type { Poi } from "../../../../../types/poi";
 
 import Bottle from "../../../../../assets/icons/Bottle.svg?react";
 import Battery from "../../../../../assets/icons/Battery.svg?react";
@@ -34,23 +34,40 @@ function createCustomMarkerContent(poi: Poi): HTMLElement {
   return div;
 }
 
-export default function ClusteredMarkers({ pois }: { pois: Poi[] }) {
+export default function ClusteredMarkers({
+  pois,
+  setSelectedLocation,
+  setIsInfoVisible,
+}: {
+  pois: Poi[];
+  setSelectedLocation: Dispatch<SetStateAction<Poi | null>>;
+  setIsInfoVisible: Dispatch<SetStateAction<boolean>>;
+}) {
   const map = useMap();
 
   useEffect(() => {
     if (!map) return;
 
-    const markers = pois.map(
-      (poi) =>
-        new google.maps.marker.AdvancedMarkerElement({
-          position: poi.location,
-          content: createCustomMarkerContent(poi),
-        })
-    );
+    // 마커 생성
+    const markers = pois.map((poi) => {
+      const marker = new google.maps.marker.AdvancedMarkerElement({
+        position: poi.location,
+        content: createCustomMarkerContent(poi),
+      });
 
+      //  개별 마커 클릭 이벤트
+      marker.addListener("click", () => {
+        setSelectedLocation(poi);
+        setIsInfoVisible(true);
+      });
+
+      return marker;
+    });
+
+    // 클러스터러 생성
     const clusterer = new MarkerClusterer({
       markers,
-      map: null,
+      map,
       renderer: { render: customClusterRenderer },
     });
 
@@ -67,6 +84,8 @@ export default function ClusteredMarkers({ pois }: { pois: Poi[] }) {
     };
 
     updateClustering();
+
+    // 줌 이벤트 리스너
     const zoomListener = map.addListener("zoom_changed", updateClustering);
 
     return () => {

@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import OutlineHeart from "../../../../assets/icons/OutlineHeart.svg?react";
 import FillHeart from "../../../../assets/icons/FillHeart.svg?react";
-import axios from "axios";
+import {
+  getLikeLocation,
+  removeLikeLocation,
+} from "../../../../utils/firebase/manageLikeLocations";
+import { useNavigate } from "react-router-dom";
 
 interface StoreType {
   name: string;
@@ -12,14 +16,22 @@ interface StoreType {
 export default function Favorites() {
   const [category, setCategory] = useState("전체보기");
   const [favorites, setFavorites] = useState<StoreType[]>([]);
-  const [like, setLike] = useState<boolean>(true);
+
   useEffect(() => {
-    setTimeout(() => {
-      axios.get("/api/favorites").then((res) => {
-        setFavorites(res.data.favorites);
-      });
-    }, 100);
+    const fetchLikedLocations = async () => {
+      const result = await getLikeLocation();
+      setFavorites(result?.locations);
+    };
+    fetchLikedLocations();
   }, []);
+
+  useEffect(() => {
+    const fetchLikedLocations = async () => {
+      const result = await getLikeLocation();
+      setFavorites(result?.locations);
+    };
+    fetchLikedLocations();
+  }, [favorites]);
 
   const filterFavorites = (category: string) => {
     if (category === "전체보기") {
@@ -29,13 +41,15 @@ export default function Favorites() {
   };
 
   const Container = ({ store }: { store: StoreType }) => {
+    const [like, setLike] = useState<boolean>(true);
+    const navigate = useNavigate();
     return (
       <div className="w-96 py-4 pl-8 pr-4 flex flex-row justify-between">
         <div>
           <p className="mb-2">
             <span className="text-xl">{store.name}</span>
             <span className="ml-2 text-sm text-[#7D8C8B]">
-              {store.category}
+              {store.category === "pill" ? "폐의약품" : "공병"}
             </span>
           </p>
           <p className="text-sm">{store.time}</p>
@@ -45,11 +59,17 @@ export default function Favorites() {
           <button
             onClick={() => {
               setLike(!like);
+              removeLikeLocation(store.name);
             }}
           >
             {like ? <FillHeart /> : <OutlineHeart />}
           </button>
-          <button className="bg-[#007aff] text-white  rounded-lg py-2 px-4">
+          <button
+            className="bg-[#007aff] text-white  rounded-lg py-2 px-4"
+            onClick={() => {
+              navigate("/main", { state: { poi: store } });
+            }}
+          >
             길찾기 시작
           </button>
         </div>
