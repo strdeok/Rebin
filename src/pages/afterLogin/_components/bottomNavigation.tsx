@@ -1,7 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import Map from "../../../assets/icons/Map.svg?react";
 import Radar from "../../../assets/icons/Radar.svg?react";
-import Store from "../../../assets/icons/Store.svg?react";
 import User from "../../../assets/icons/User.svg?react";
 import ScreenNav from "../main/components/screenNav";
 import Chat from "../../../assets/icons/Chat.svg?react"
