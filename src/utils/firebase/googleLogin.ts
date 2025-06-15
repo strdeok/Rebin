@@ -14,8 +14,8 @@ export default async function signIn() {
 
   try {
     await setPersistence(auth, browserSessionPersistence);
-    const result = signInWithPopup(auth, provider);
-    return await result;
+    const result = await signInWithPopup(auth, provider);
+    return result;
   } catch {
     return "error";
   }
