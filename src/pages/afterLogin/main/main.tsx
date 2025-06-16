@@ -8,7 +8,7 @@ import { getLikeLocation } from "../../../utils/firebase/manageLikeLocations";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../../firebase";
 import { useLocation } from "react-router-dom";
-import useGetNowLocation from "../../../utils/getNowLocation";
+import { useUserLocation } from "../../../state/nowLocationContext";
 
 export default function Main() {
   const [like, setLike] = useState(false);
@@ -21,7 +21,7 @@ export default function Main() {
 
   const location = useLocation();
 
-  const userLocation = useGetNowLocation();
+  const userLocation = useUserLocation();
 
   useEffect(() => {
     const isLikePlace = async () => {

@@ -13,8 +13,6 @@ export async function getWalkingMatrix(
 ): Promise<{ distances: number[]; durations: number[] }> {
   const apiKey = import.meta.env.VITE_PUBLIC_OPENROUTESERVICE_API_KEY;
 
-  console.log(userLocation, destinations);
-
   const allCoords = [
     [userLocation.lng, userLocation.lat],
     ...destinations.map((loc) => [loc.location.lng, loc.location.lat]),
