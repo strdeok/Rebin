@@ -72,6 +72,7 @@ export default function AroundTrash() {
   };
 
   useEffect(() => {
+    if (userLocation.lat === 0 && userLocation.lng === 0) return;
     const bins = async () => {
       setLoading(true);
       const location = getBoundaryCollectors(userLocation);

@@ -63,6 +63,7 @@ export default function Main() {
     <main className="w-full h-full">
       <LikeBanner like={like} />
       <GoogleMap
+      userLocation={userLocation}
         isCenter={isCenter}
         setIsCenter={setIsCenter}
         selectedLocation={selectedLocation}

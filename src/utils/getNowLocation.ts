@@ -9,6 +9,24 @@ export default function useGetNowLocation() {
   useEffect(() => {
     if (!navigator.geolocation) return;
 
+    // 초기 위치 1회 조회 (빠름)
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      },
+      (err) => {
+        console.error("초기 위치 조회 실패:", err);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+      }
+    );
+
+    // 이후 지속적인 위치 추적
     const watchId = navigator.geolocation.watchPosition(
       (position) => {
         setLocation({
@@ -27,7 +45,7 @@ export default function useGetNowLocation() {
     );
 
     return () => {
-      navigator.geolocation.clearWatch(watchId); // 메모리 누수 방지
+      navigator.geolocation.clearWatch(watchId);
     };
   }, []);
 
