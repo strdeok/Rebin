@@ -2,7 +2,6 @@ import { APIProvider, Map } from "@vis.gl/react-google-maps";
 import Markers from "./customMarker";
 import ClusteredMarkers from "./markerCluster";
 import UserMarker from "./userMarker";
-import useGetNowLocation from "../../../../../utils/getNowLocation";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import type { Poi } from "../../../../../types/poi";
 import MapCenter from "./mapCenterFunction";
@@ -20,6 +19,7 @@ const SongDoBounds = {
 };
 
 export default function GoogleMap({
+  userLocation,
   isCenter,
   selectedLocation,
   isInfoVisible,
@@ -30,6 +30,7 @@ export default function GoogleMap({
   showPath,
   showLikedOnly,
 }: {
+  userLocation: google.maps.LatLngLiteral;
   isCenter: boolean;
   selectedLocation: Poi | null;
   setSelectedLocation: Dispatch<SetStateAction<Poi | null>>;
@@ -40,7 +41,6 @@ export default function GoogleMap({
   showPath: boolean;
   showLikedOnly: boolean;
 }) {
-  const userLocation = useGetNowLocation(); // 실제 위치 가져오기
   const [locations, setLocations] = useState<Poi[]>([]);
   const [isInBoundary, setIsInBoundary] = useState(true);
 
@@ -77,7 +77,7 @@ export default function GoogleMap({
         <p>서비스 지역을 벗어났습니다.</p>
         <p>송도 지역으로 진입하시면 정상적으로 이용하실 수 있습니다.</p>
       </div>
-    )
+    );
   } else {
     return (
       <APIProvider
