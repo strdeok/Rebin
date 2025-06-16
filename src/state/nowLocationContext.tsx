@@ -14,6 +14,22 @@ export const LocationProvider = ({
   useEffect(() => {
     if (!navigator.geolocation) return;
 
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      },
+      (err) => {
+        console.error("초기 위치 조회 실패:", err);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+      }
+    );
+
     const watchId = navigator.geolocation.watchPosition(
       (pos) => {
         setLocation({
