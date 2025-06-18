@@ -9,7 +9,6 @@ export default function Login() {
     siginIn()
       .then((res) => {
         const userInfo = getAdditionalUserInfo(res as UserCredential);
-        console.log(userInfo)
         userInfo?.isNewUser ? navigate("/signup") : navigate("/main");
       })
       .catch(() => {

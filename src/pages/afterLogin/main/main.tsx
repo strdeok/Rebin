@@ -26,15 +26,12 @@ export default function Main() {
   useEffect(() => {
     const isLikePlace = async () => {
       const result = await getLikeLocation();
-      console.log(result);
       setLikeLocation(result?.locations);
     };
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         isLikePlace();
-      } else {
-        console.log("로그인 안 됨");
       }
     });
 
