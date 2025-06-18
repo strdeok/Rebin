@@ -63,6 +63,7 @@ export default function AroundTrash() {
   const userLocation = useUserLocation();
   const [loading, setLoading] = useState(false);
   const [isInBoundary, setIsInBoundary] = useState(true);
+  const [apiError, setApiError] = useState(false);
 
   const SongDoBounds = {
     north: 37.427025044166236,
@@ -77,6 +78,12 @@ export default function AroundTrash() {
       setLoading(true);
       const location = getBoundaryCollectors(userLocation);
       const matrix = await getWalkingMatrix(userLocation, location);
+
+      if (!matrix) {
+        setApiError(true);
+        return;
+      }
+
       const mergedLocations = location
         .map((loc, index) => ({
           ...loc,
@@ -102,7 +109,14 @@ export default function AroundTrash() {
     }
   }, [userLocation]);
 
-  if (isInBoundary) {
+  if (apiError) {
+    return (
+      <div className=" h-full flex flex-col items-center justify-center">
+        <p>서비스 오류입니다.</p>
+        <p>잠시 후 다시 시도해주세요.</p>
+      </div>
+    );
+  } else if (isInBoundary) {
     return (
       <div className="relative flex flex-col items-center pb-20">
         {loading ? (
