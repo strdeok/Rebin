@@ -10,7 +10,7 @@ export async function getWalkingMatrix(
     time: string;
     category: string;
   }[]
-): Promise<{ distances: number[]; durations: number[] }> {
+): Promise<{ distances: number[]; durations: number[] } | false> {
   const apiKey = import.meta.env.VITE_PUBLIC_OPENROUTESERVICE_API_KEY;
 
   const allCoords = [
@@ -18,33 +18,35 @@ export async function getWalkingMatrix(
     ...destinations.map((loc) => [loc.location.lng, loc.location.lat]),
   ];
 
-  console.log(allCoords);
+  try {
+    const response = await fetch(
+      "https://api.openrouteservice.org/v2/matrix/foot-walking",
+      {
+        method: "POST",
+        headers: {
+          Authorization: apiKey,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          locations: allCoords,
+          metrics: ["distance", "duration"],
+          sources: [0], // 출발지는 첫 번째 좌표
+          destinations: destinations.map((_, idx) => idx + 1), // 목적지는 1번부터 시작
+        }),
+      }
+    );
 
-  const response = await fetch(
-    "https://api.openrouteservice.org/v2/matrix/foot-walking",
-    {
-      method: "POST",
-      headers: {
-        Authorization: apiKey,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        locations: allCoords,
-        metrics: ["distance", "duration"],
-        sources: [0], // 출발지는 첫 번째 좌표
-        destinations: destinations.map((_, idx) => idx + 1), // 목적지는 1번부터 시작
-      }),
+    if (!response.ok) {
+      return false;
     }
-  );
 
-  if (!response.ok) {
-    throw new Error("도보 거리 매트릭스를 불러오는 데 실패했습니다.");
+    const data = await response.json();
+
+    return {
+      distances: data.distances[0], // 출발지 → 각 목적지 거리 (m)
+      durations: data.durations[0], // 출발지 → 각 목적지 시간 (초)
+    };
+  } catch (error) {
+    return false;
   }
-
-  const data = await response.json();
-
-  return {
-    distances: data.distances[0], // 출발지 → 각 목적지 거리 (m)
-    durations: data.durations[0], // 출발지 → 각 목적지 시간 (초)
-  };
 }

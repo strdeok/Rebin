@@ -71,6 +71,14 @@ export default function GoogleMap({
     }
   }, [userLocation]);
 
+  if (userLocation.lat === 0 && userLocation.lng === 0) {
+    return (
+      <div className="bg-white h-full flex flex-col items-center justify-center text-gray-700">
+        <p>위치 정보를 불러오는 중입니다...</p>
+      </div>
+    );
+  }
+
   if (!isInBoundary) {
     return (
       <div className="bg-gray-500 h-full flex flex-col items-center justify-center text-white">
