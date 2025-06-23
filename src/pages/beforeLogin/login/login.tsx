@@ -12,7 +12,7 @@ export default function Login() {
         userInfo?.isNewUser ? navigate("/signup") : navigate("/main");
       })
       .catch(() => {
-        alert("로그인에 문제가 발생하였습니다. 다시 시도해주세요.");
+        // alert("로그인에 문제가 발생하였습니다. 다시 시도해주세요.");
         navigate("/");
       });
   }, []);

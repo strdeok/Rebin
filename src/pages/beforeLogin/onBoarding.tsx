@@ -1,8 +1,29 @@
 import { useNavigate } from "react-router-dom";
 import Google from "../../assets/icons/Google.svg?react";
 import signIn from "../../utils/firebase/googleLogin";
+import {
+  browserSessionPersistence,
+  getRedirectResult,
+  GoogleAuthProvider,
+  setPersistence,
+  signInWithPopup,
+} from "firebase/auth";
+import { auth } from "../../../firebase";
+import { useEffect } from "react";
 
 export default function OnBoarding() {
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then((res) => {
+        console.log(res);
+        navigate("/login");
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("실패");
+      });
+  }, []);
+
   const navigate = useNavigate();
   return (
     <div className="flex flex-col px-8 font-semibold">
@@ -22,9 +43,12 @@ export default function OnBoarding() {
 
       <button
         className="mt-18 bg-[#19824F] h-16 flex flex-row items-center justify-center rounded-lg  text-white text-xl"
-        onClick={() => {
-          signIn();
-          navigate("/login");
+        onClick={async () => {
+          // signIn();
+          // navigate("/login");
+          const provider = new GoogleAuthProvider();
+          await setPersistence(auth, browserSessionPersistence);
+          await signInWithPopup(auth, provider);
         }}
       >
         <Google className="mr-2" /> 로그인
