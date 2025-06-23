@@ -5,7 +5,6 @@ import {
   getRedirectResult,
   GoogleAuthProvider,
   setPersistence,
-  signInWithPopup,
   signInWithRedirect,
 } from "firebase/auth";
 import { auth } from "../../../firebase";
