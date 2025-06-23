@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import Google from "../../assets/icons/Google.svg?react";
-import signIn from "../../utils/firebase/googleLogin";
 import {
   browserSessionPersistence,
   getRedirectResult,
