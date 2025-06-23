@@ -6,6 +6,7 @@ import {
   GoogleAuthProvider,
   setPersistence,
   signInWithPopup,
+  signInWithRedirect,
 } from "firebase/auth";
 import { auth } from "../../../firebase";
 import { useEffect } from "react";
@@ -15,7 +16,7 @@ export default function OnBoarding() {
     getRedirectResult(auth)
       .then((res) => {
         console.log(res);
-        navigate("/login");
+        navigate("/main");
       })
       .catch((err) => {
         console.log(err);
@@ -47,7 +48,7 @@ export default function OnBoarding() {
           // navigate("/login");
           const provider = new GoogleAuthProvider();
           await setPersistence(auth, browserSessionPersistence);
-          await signInWithPopup(auth, provider);
+          await signInWithRedirect(auth, provider);
         }}
       >
         <Google className="mr-2" /> 로그인
