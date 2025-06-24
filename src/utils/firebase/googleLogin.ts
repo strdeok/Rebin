@@ -3,7 +3,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   setPersistence,
-  browserSessionPersistence,
+  browserLocalPersistence,
 } from "firebase/auth";
 import { app } from "../../../firebase";
 
@@ -13,7 +13,7 @@ export default async function signIn() {
   const auth = getAuth();
 
   try {
-    await setPersistence(auth, browserSessionPersistence);
+    await setPersistence(auth, browserLocalPersistence);
     const result = await signInWithPopup(auth, provider);
     return result;
   } catch {
