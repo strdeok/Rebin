@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import Google from "../../assets/icons/Google.svg?react";
 import {
-  browserSessionPersistence,
+  browserLocalPersistence,
   getRedirectResult,
   GoogleAuthProvider,
+  onAuthStateChanged,
   setPersistence,
   signInWithRedirect,
 } from "firebase/auth";
@@ -12,15 +13,20 @@ import { useEffect } from "react";
 
 export default function OnBoarding() {
   useEffect(() => {
-    getRedirectResult(auth)
-      .then((res) => {
-        console.log(res);
-        navigate("/main");
-      })
-      .catch((err) => {
-        console.log(err);
-        alert("실패");
-      });
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log(user);
+      } else console.log(user);
+    });
+    const func = async () => {
+      const result = await getRedirectResult(auth);
+      if (result) {
+        console.log(result);
+      } else {
+        console.log("실패");
+      }
+    };
+    func();
   }, []);
 
   const navigate = useNavigate();
@@ -43,10 +49,8 @@ export default function OnBoarding() {
       <button
         className="mt-18 bg-[#19824F] h-16 flex flex-row items-center justify-center rounded-lg  text-white text-xl"
         onClick={async () => {
-          // signIn();
-          // navigate("/login");
           const provider = new GoogleAuthProvider();
-          await setPersistence(auth, browserSessionPersistence);
+          await setPersistence(auth, browserLocalPersistence);
           await signInWithRedirect(auth, provider);
         }}
       >
