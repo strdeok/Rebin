@@ -5,7 +5,7 @@ import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_PUBLIC_FIREBASE_API_KEY,
-  authDomain: "rebin.vercel.app",
+  authDomain: import.meta.env.VITE_PUBLIC_FIREBASE_AUTHDOMAIN,
   projectId: import.meta.env.VITE_PUBLIC_FIREBASE_PROJECTID,
   storageBucket: import.meta.env.VITE_PUBLIC_FIREBASE_STORAGEBUCKET,
   messagingSenderId: import.meta.env.VITE_PUBLIC_FIREBASE_MESSAGINGSENDERINGID,
