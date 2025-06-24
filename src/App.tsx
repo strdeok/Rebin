@@ -1,6 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import OnBoarding from "./pages/beforeLogin/onBoarding";
-import Login from "./pages/beforeLogin/login/login";
 import Main from "./pages/afterLogin/main/main";
 import Mypage from "./pages/afterLogin/mypage/mypage";
 import MainLayout from "./pages/afterLogin/mainLayout";
@@ -16,7 +15,6 @@ function App() {
       <ScrollTop />
       <Routes>
         <Route path="/" element={<OnBoarding />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SetUserInfo />} />
 
         <Route element={<MainLayout />}>
