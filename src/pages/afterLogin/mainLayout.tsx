@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import BottomNavigation from "./_components/bottomNavigation";
 import Header from "./_components/header";
 import { CategoryProvider } from "../../state/categoryContext";
@@ -7,11 +7,12 @@ import { useEffect } from "react";
 import { getAuth } from "firebase/auth";
 
 export default function MainLayout() {
+  const navigate = useNavigate();
   useEffect(() => {
     const auth = getAuth();
     const user = auth.currentUser;
     if (!user) {
-      window.location.href = "/login";
+      navigate("/");
     }
   }, []);
   return (
