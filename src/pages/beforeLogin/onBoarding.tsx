@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+
 import Google from "../../assets/icons/Google.svg?react";
 import {
   browserLocalPersistence,
@@ -29,7 +29,6 @@ export default function OnBoarding() {
     func();
   }, []);
 
-  const navigate = useNavigate();
   return (
     <div className="flex flex-col px-8 font-semibold">
       <div className="mt-12 ml-4">
