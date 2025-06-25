@@ -26,3 +26,7 @@ Backend & Infra: Firebase (Auth, Firestore, Hosting), Google Map API, openroutes
 - 더 다양한 지역/카테고리 수거함 DB 연동
 - QR 코드 또는 사진 인증을 통한 포인트 적립을 통한 리워드 시스템
 - 리더보드, 커뮤니티 기반 피드백 시스템 제공하여 참여 독려
+
+
+## 서비스 주소
+https://rebin-e8883.firebaseapp.com/
