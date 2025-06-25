@@ -60,7 +60,7 @@ export default function ScreenNav() {
       id={id}
       onClick={onClick}
       layout
-      className={`size-[4.5rem] bg-[#19824F] rounded-full flex flex-col items-center justify-center shadow-md z-30 border-4 
+      className={`size-[3.5rem] bg-[#19824F] rounded-full flex flex-col items-center justify-center shadow-md z-30 border-4 
         ${isSelected ? "border-red-500" : "border-transparent"}`}
       whileTap={{ scale: 0.9 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
