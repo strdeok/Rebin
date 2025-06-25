@@ -1,42 +1,8 @@
 import Google from "../../assets/icons/Google.svg?react";
-import {
-  getAdditionalUserInfo,
-  getRedirectResult,
-  onAuthStateChanged,
-  type UserCredential,
-} from "firebase/auth";
-import { auth } from "../../../firebase";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import signIn from "../../utils/firebase/googleLogin";
 
 export default function OnBoarding() {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        navigate("/main");
-      }
-    });
-
-    const func = async () => {
-      try {
-        const result = await getRedirectResult(auth);
-        if (result) {
-          const isNewUser = getAdditionalUserInfo(result as UserCredential);
-          if (isNewUser?.isNewUser) {
-            navigate("/signup");
-          } else {
-            navigate("/main");
-          }
-        }
-      } catch (error) {
-        console.error("getRedirectResult 에러:", error);
-      }
-    };
-    func();
-  }, []);
 
   return (
     <div className="flex flex-col px-8 font-semibold">
@@ -57,7 +23,7 @@ export default function OnBoarding() {
       <button
         className="mt-18 bg-[#19824F] h-16 flex flex-row items-center justify-center rounded-lg  text-white text-xl"
         onClick={() => {
-          signIn();
+          navigate("/login")
         }}
       >
         <Google className="mr-2" /> 로그인

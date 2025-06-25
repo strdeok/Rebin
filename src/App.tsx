@@ -8,6 +8,7 @@ import ChatPage from "./pages/afterLogin/chat-bot/chatPage";
 import Favorites from "./pages/afterLogin/mypage/favorites/favorites";
 import ScrollTop from "./utils/scrollTop";
 import SetUserInfo from "./pages/beforeLogin/login/setUserInfo";
+import Login from "./pages/beforeLogin/login/login";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <ScrollTop />
       <Routes>
         <Route path="/" element={<OnBoarding />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SetUserInfo />} />
 
         <Route element={<MainLayout />}>

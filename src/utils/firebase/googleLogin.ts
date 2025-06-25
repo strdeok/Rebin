@@ -2,8 +2,8 @@ import {
   getAuth,
   GoogleAuthProvider,
   setPersistence,
-  browserLocalPersistence,
   signInWithRedirect,
+  browserSessionPersistence,
 } from "firebase/auth";
 import { app } from "../../../firebase";
 
@@ -12,6 +12,6 @@ export default async function signIn() {
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
 
-  await setPersistence(auth, browserLocalPersistence);
+  await setPersistence(auth, browserSessionPersistence);
   await signInWithRedirect(auth, provider);
 }
