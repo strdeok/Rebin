@@ -60,7 +60,7 @@ export default function AroundTrash() {
       duration: number;
     }[]
   >();
-  const userLocation = useUserLocation();
+  const { userLocation } = useUserLocation();
   const [loading, setLoading] = useState(false);
   const [isInBoundary, setIsInBoundary] = useState(true);
   const [apiError, setApiError] = useState(false);

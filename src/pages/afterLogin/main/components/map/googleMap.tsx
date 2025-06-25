@@ -8,6 +8,7 @@ import MapCenter from "./mapCenterFunction";
 import Polyline from "./mapPolyline";
 import { useCategory } from "../../../../../state/categoryContext";
 import GetPillLocation from "../../../../../api/getPillLocations";
+import { useUserLocation } from "../../../../../state/nowLocationContext";
 
 // https://visgl.github.io/react-google-maps/examples/directions : 오피셜 사이트
 
@@ -19,7 +20,6 @@ const SongDoBounds = {
 };
 
 export default function GoogleMap({
-  userLocation,
   isCenter,
   selectedLocation,
   isInfoVisible,
@@ -30,7 +30,6 @@ export default function GoogleMap({
   showPath,
   showLikedOnly,
 }: {
-  userLocation: google.maps.LatLngLiteral;
   isCenter: boolean;
   selectedLocation: Poi | null;
   setSelectedLocation: Dispatch<SetStateAction<Poi | null>>;
@@ -41,6 +40,8 @@ export default function GoogleMap({
   showPath: boolean;
   showLikedOnly: boolean;
 }) {
+  const { userLocation, setUserLocation, setIsExperienceMode } =
+    useUserLocation();
   const [locations, setLocations] = useState<Poi[]>([]);
   const [isInBoundary, setIsInBoundary] = useState(true);
 
@@ -52,6 +53,16 @@ export default function GoogleMap({
       : locations.filter((loc) => loc.category === selectedCategory);
 
   const displayPois = showLikedOnly ? likeLocation ?? [] : filteredLocations;
+
+  const setExperience = () => {
+    setIsExperienceMode(true);
+    setUserLocation({ lat: 37.386196, lng: 126.639404 });
+  };
+
+  const exitExperience = () => {
+    setIsExperienceMode(false);
+  };
+
 
   useEffect(() => {
     setLocations(GetPillLocation() as Poi[]);
@@ -84,63 +95,83 @@ export default function GoogleMap({
       <div className="bg-gray-500 h-full flex flex-col items-center justify-center text-white">
         <p>서비스 지역을 벗어났습니다.</p>
         <p>송도 지역으로 진입하시면 정상적으로 이용하실 수 있습니다.</p>
+        <button
+        className="bg-[#0088FF] w-28 py-2 rounded-lg mt-4"
+          onClick={() => {
+            setExperience();
+          }}
+        >
+          체험해보기
+        </button>
       </div>
     );
   } else {
     return (
-      <APIProvider
-        apiKey={import.meta.env.VITE_PUBLIC_MAP_KEY}
-        libraries={["marker"]}
-      >
-        <Map
-          mapId={import.meta.env.VITE_PUBLIC_MAP_ID}
-          style={{ width: "100%", height: "100%" }}
-          defaultCenter={userLocation || { lat: 37.386196, lng: 126.639404 }}
-          defaultZoom={17}
-          gestureHandling="greedy"
-          disableDefaultUI
-          onClick={() => setIsInfoVisible(false)}
-          onDrag={() => setIsCenter(false)}
-          restriction={{
-            latLngBounds: SongDoBounds,
-            strictBounds: false,
-          }}
+      <>
+        <div className="absolute w-full z-50 flex justify-center">
+          <button
+            className="bg-[#19824f] w-36 h-10 rounded-lg text-white"
+            onClick={() => {
+              exitExperience()
+            }}
+          >
+            체험종료
+          </button>
+        </div>
+        <APIProvider
+          apiKey={import.meta.env.VITE_PUBLIC_MAP_KEY}
+          libraries={["marker"]}
         >
-          <MapCenter
-            isCenter={isCenter}
-            location={userLocation}
-            setIsCenter={setIsCenter}
-          />
+          <Map
+            mapId={import.meta.env.VITE_PUBLIC_MAP_ID}
+            style={{ width: "100%", height: "100%" }}
+            defaultCenter={userLocation || { lat: 37.386196, lng: 126.639404 }}
+            defaultZoom={17}
+            gestureHandling="greedy"
+            disableDefaultUI
+            onClick={() => setIsInfoVisible(false)}
+            onDrag={() => setIsCenter(false)}
+            restriction={{
+              latLngBounds: SongDoBounds,
+              strictBounds: false,
+            }}
+          >
+            <MapCenter
+              isCenter={isCenter}
+              location={userLocation}
+              setIsCenter={setIsCenter}
+            />
 
-          {showPath && (
-            <Polyline
-              origin={userLocation}
-              destination={selectedLocation}
-              showPath={showPath}
+            {showPath && (
+              <Polyline
+                origin={userLocation}
+                destination={selectedLocation}
+                showPath={showPath}
+              />
+            )}
+          </Map>
+
+          <UserMarker userLocation={userLocation} />
+
+          {showPath !== true && (
+            <ClusteredMarkers
+              pois={displayPois}
+              setSelectedLocation={setSelectedLocation}
+              setIsInfoVisible={setIsInfoVisible}
             />
           )}
-        </Map>
 
-        <UserMarker userLocation={userLocation} />
-
-        {showPath !== true && (
-          <ClusteredMarkers
+          <Markers
             pois={displayPois}
-            setSelectedLocation={setSelectedLocation}
+            selectedLocation={selectedLocation}
+            isInfoVisible={isInfoVisible}
             setIsInfoVisible={setIsInfoVisible}
+            likeLocation={likeLocation}
+            setSelectedLocation={setSelectedLocation}
+            showPath={showPath}
           />
-        )}
-
-        <Markers
-          pois={displayPois}
-          selectedLocation={selectedLocation}
-          isInfoVisible={isInfoVisible}
-          setIsInfoVisible={setIsInfoVisible}
-          likeLocation={likeLocation}
-          setSelectedLocation={setSelectedLocation}
-          showPath={showPath}
-        />
-      </APIProvider>
+        </APIProvider>
+      </>
     );
   }
 }

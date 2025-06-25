@@ -8,7 +8,6 @@ import { getLikeLocation } from "../../../utils/firebase/manageLikeLocations";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../../firebase";
 import { useLocation } from "react-router-dom";
-import { useUserLocation } from "../../../state/nowLocationContext";
 
 export default function Main() {
   const [like, setLike] = useState(false);
@@ -20,8 +19,6 @@ export default function Main() {
   const [showLikedOnly, setShowLikedOnly] = useState(false);
 
   const location = useLocation();
-
-  const userLocation = useUserLocation();
 
   useEffect(() => {
     const isLikePlace = async () => {
@@ -60,7 +57,6 @@ export default function Main() {
     <main className="w-full h-full">
       <LikeBanner like={like} />
       <GoogleMap
-      userLocation={userLocation}
         isCenter={isCenter}
         setIsCenter={setIsCenter}
         selectedLocation={selectedLocation}
@@ -87,7 +83,6 @@ export default function Main() {
         selectedLocation={selectedLocation}
         showPath={showPath}
         setShowPath={setShowPath}
-        userLocation={userLocation}
       />
     </main>
   );

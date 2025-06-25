@@ -8,6 +8,7 @@ import {
   removeLikeLocation,
 } from "../../../../utils/firebase/manageLikeLocations";
 import { getWalkingDistance } from "../../../../api/getWalkingTimeDistance";
+import { useUserLocation } from "../../../../state/nowLocationContext";
 
 export default function PlaceInfo({
   like,
@@ -18,7 +19,6 @@ export default function PlaceInfo({
   selectedLocation,
   showPath,
   setShowPath,
-  userLocation,
 }: {
   like: boolean;
   setLike: Dispatch<React.SetStateAction<boolean>>;
@@ -28,13 +28,13 @@ export default function PlaceInfo({
   selectedLocation: Poi | null;
   showPath: boolean;
   setShowPath: Dispatch<React.SetStateAction<boolean>>;
-  userLocation: { lat: number; lng: number };
 }) {
   const likeLocationNames = likeLocation.map((item) => item);
   const [routeInfo, setRouteInfo] = useState<{
     distance: number;
     duration: number;
   } | null>(null);
+  const { userLocation } = useUserLocation();
 
   useEffect(() => {
     if (!selectedLocation) return;
@@ -66,8 +66,9 @@ export default function PlaceInfo({
         transition={{ duration: 0.1 }}
         className="absolute bottom-0 z-50 right-0 w-full h-64 bg-white rounded-[32px_32px_0px_0px] overflow-hidden shadow-md"
       >
-        {likeLocationNames.find((item) => item.name === selectedLocation?.name) ||
-        like ? (
+        {likeLocationNames.find(
+          (item) => item.name === selectedLocation?.name
+        ) || like ? (
           <FilledHeart
             fill="red"
             className="absolute w-9 h-9 top-[30px] right-8"
