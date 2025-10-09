@@ -13,5 +13,6 @@ export default async function signIn() {
   const auth = getAuth();
 
   await setPersistence(auth, browserSessionPersistence);
-  await signInWithRedirect(auth, provider);
+  const result = await signInWithRedirect(auth, provider);
+  return result;
 }

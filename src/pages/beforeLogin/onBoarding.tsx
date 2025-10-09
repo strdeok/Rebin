@@ -15,6 +15,7 @@ export default function OnBoarding() {
       </div>
 
       <img
+        fetchPriority="high"
         src="/images/온보딩 그림.png"
         alt="onboardin picture"
         className="mt-18"
@@ -23,7 +24,7 @@ export default function OnBoarding() {
       <button
         className="mt-18 bg-[#19824F] h-16 flex flex-row items-center justify-center rounded-lg  text-white text-xl"
         onClick={() => {
-          navigate("/login")
+          navigate("/login");
         }}
       >
         <Google className="mr-2" /> 로그인

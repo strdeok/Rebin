@@ -6,13 +6,13 @@ import { getAuth } from "firebase/auth";
 
 export default function MainLayout() {
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   const auth = getAuth();
-  //   const user = auth.currentUser;
-  //   if (!user) {
-  //     navigate("/");
-  //   }
-  // }, []);
+  useEffect(() => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user) {
+      navigate("/");
+    }
+  }, []);
   return (
     <>
       <Header />
