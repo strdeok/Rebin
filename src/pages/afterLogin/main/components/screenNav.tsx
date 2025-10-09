@@ -6,7 +6,8 @@ import Pill from "../../../../assets/icons/Pill.svg?react";
 import Close from "../../../../assets/icons/Close.svg?react";
 import Bottle from "../../../../assets/icons/Bottle.svg?react";
 import type { CategoryType } from "../../../../types/categoryType";
-import { useCategory } from "../../../../state/categoryContext";
+import { useMapStore } from "../../../../store/store";
+import { useShallow } from "zustand/shallow";
 
 interface CategoryItem {
   title: string;
@@ -22,7 +23,9 @@ const categories: CategoryItem[] = [
 export default function ScreenNav() {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<CategoryType | null>(null);
-  const { setSelectedCategory } = useCategory();
+  const { setSelectedCategory } = useMapStore(useShallow((state) => ({
+    setSelectedCategory: state.setSelectedCategory,
+  })));
 
   const handleMainClick = () => {
     setIsOpen((prev) => !prev);
@@ -58,6 +61,7 @@ export default function ScreenNav() {
   }) => (
     <motion.button
       id={id}
+      aria-label="category-button"
       onClick={onClick}
       layout
       className={`size-[3.5rem] bg-[#19824F] rounded-full flex flex-col items-center justify-center shadow-md z-30 border-4 

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { getWalkingMatrix } from "../../../api/getWalkingMatrix";
 import Loading from "../../../components/loading";
 import { useNavigate } from "react-router-dom";
-import { useUserLocation } from "../../../state/nowLocationContext";
+import { useMapStore } from "../../../store/store";
 
 const Container = ({ location }: any) => {
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ export default function AroundTrash() {
       duration: number;
     }[]
   >();
-  const { userLocation } = useUserLocation();
+  const { userLocation } = useMapStore();
   const [loading, setLoading] = useState(false);
   const [isInBoundary, setIsInBoundary] = useState(true);
   const [apiError, setApiError] = useState(false);

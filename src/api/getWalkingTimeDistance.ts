@@ -1,4 +1,3 @@
-// src/utils/getWalkingDistance.ts
 export async function getWalkingDistance(start: any, end: any) {
   const apiKey = import.meta.env.VITE_PUBLIC_OPENROUTESERVICE_API_KEY; // 발급받은 키 입력
 
@@ -11,8 +10,10 @@ export async function getWalkingDistance(start: any, end: any) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        coordinates: [start, end],
-        radiuses: [1000, 1000],
+        coordinates: [
+          [start.lng, start.lat],
+          [end.lng, end.lat],
+        ],
       }),
     }
   );
@@ -24,4 +25,4 @@ export async function getWalkingDistance(start: any, end: any) {
   const data = await response.json();
 
   return data;
-}   
+}

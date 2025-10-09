@@ -1,8 +1,15 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useMapStore } from "../../../../store/store";
+import { useShallow } from "zustand/shallow";
 
-export default function LikeBanner({ like }: { like: boolean }) {
+export default function LikeBanner() {
   const [visible, setVisible] = useState(false);
+  const { like } = useMapStore(
+    useShallow((state) => ({
+      like: state.like,
+    }))
+  );
 
   useEffect(() => {
     if (like) {

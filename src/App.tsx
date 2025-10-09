@@ -1,34 +1,42 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import OnBoarding from "./pages/beforeLogin/onBoarding";
-import Main from "./pages/afterLogin/main/main";
-import Mypage from "./pages/afterLogin/mypage/mypage";
-import MainLayout from "./pages/afterLogin/mainLayout";
-import AroundTrash from "./pages/afterLogin/aroundTrash/aronudTrash";
-import ChatPage from "./pages/afterLogin/chat-bot/chatPage";
-import Favorites from "./pages/afterLogin/mypage/favorites/favorites";
+import { Suspense, lazy } from "react"; 
+import Loading from "./components/loading";
 import ScrollTop from "./utils/scrollTop";
-import SetUserInfo from "./pages/beforeLogin/login/setUserInfo";
-import Login from "./pages/beforeLogin/login/login";
+
+const OnBoarding = lazy(() => import("./pages/beforeLogin/onBoarding"));
+const Login = lazy(() => import("./pages/beforeLogin/login/login"));
+const SetUserInfo = lazy(() => import("./pages/beforeLogin/login/setUserInfo"));
+
+const MainLayout = lazy(() => import("./pages/afterLogin/mainLayout"));
+const Main = lazy(() => import("./pages/afterLogin/main/main"));
+const Mypage = lazy(() => import("./pages/afterLogin/mypage/mypage"));
+const AroundTrash = lazy(
+  () => import("./pages/afterLogin/aroundTrash/aronudTrash")
+);
+const ChatPage = lazy(() => import("./pages/afterLogin/chat-bot/chatPage"));
+const Favorites = lazy(
+  () => import("./pages/afterLogin/mypage/favorites/favorites")
+);
 
 function App() {
   return (
     <BrowserRouter>
       <ScrollTop />
-      <Routes>
-        <Route path="/" element={<OnBoarding />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SetUserInfo />} />
+      <Suspense fallback={<Loading />}>
+        <Routes>
+          <Route path="/" element={<OnBoarding />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SetUserInfo />} />
 
-        <Route element={<MainLayout />}>
-          <Route path="/main" element={<Main />} />
-          <Route path="/around-trash" element={<AroundTrash />} />
-          <Route path="/mypage" element={<Mypage />} />
-          <Route path="/chat-bot" element={<ChatPage />} />
-
-          {/* 마이페이지 하위 페이지 */}
-          <Route path="/mypage/favorites" element={<Favorites />} />
-        </Route>
-      </Routes>
+          <Route element={<MainLayout />}>
+            <Route path="/main" element={<Main />} />
+            <Route path="/around-trash" element={<AroundTrash />} />
+            <Route path="/mypage" element={<Mypage />} />
+            <Route path="/chat-bot" element={<ChatPage />} />
+            <Route path="/mypage/favorites" element={<Favorites />} />
+          </Route>
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }
