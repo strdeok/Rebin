@@ -1,4 +1,4 @@
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore/lite";
 import { auth, db } from "../../../firebase"; 
 
 export const registerUser = async (name: string, phone: string) => {
