@@ -1,5 +1,5 @@
 import { getAuth, deleteUser } from "firebase/auth";
-import { getFirestore, doc, deleteDoc } from "firebase/firestore";
+import { getFirestore, doc, deleteDoc } from "firebase/firestore/lite";
 
 export async function withdrawalUser() {
   const auth = getAuth();

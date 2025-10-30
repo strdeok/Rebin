@@ -5,7 +5,7 @@ import {
   getDoc,
   setDoc,
   updateDoc,
-} from "firebase/firestore";
+} from "firebase/firestore/lite";
 import { auth, db } from "../../../firebase";
 import type { Poi } from "../../types/poi";
 

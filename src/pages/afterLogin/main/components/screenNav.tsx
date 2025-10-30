@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 
 import TrashBin from "../../../../assets/icons/TrashBin.svg?react";
 import Pill from "../../../../assets/icons/Pill.svg?react";
@@ -56,7 +56,7 @@ export default function ScreenNav() {
     isSelected?: boolean;
     id?: string;
   }) => (
-    <motion.button
+    <m.button
       id={id}
       onClick={onClick}
       layout
@@ -66,7 +66,7 @@ export default function ScreenNav() {
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
       {children}
-    </motion.button>
+    </m.button>
   );
 
   return (
@@ -74,7 +74,7 @@ export default function ScreenNav() {
       {/* Sub Buttons */}
       <AnimatePresence>
         {!selected && isOpen && (
-          <motion.div
+          <m.div
             layout
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -83,7 +83,7 @@ export default function ScreenNav() {
             className="flex fixed w-full gap-10 justify-center bottom-24 z-30"
           >
             {categories.map(({ title, icon, value }) => (
-              <motion.div
+              <m.div
                 key={value}
                 className="flex flex-col items-center text-[#19824F] font-medium"
                 initial={{ opacity: 0, scale: 0.5 }}
@@ -98,15 +98,15 @@ export default function ScreenNav() {
                 >
                   {icon}
                 </CircleButton>
-              </motion.div>
+              </m.div>
             ))}
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
       {/* Selected Button Center */}
       {selected && (
-        <motion.div
+        <m.div
           layout
           className="flex fixed w-full justify-center bottom-24 z-30"
           initial={{ opacity: 0, scale: 0.5 }}
@@ -133,7 +133,7 @@ export default function ScreenNav() {
               {categories.find((cat) => cat.value === selected)?.icon}
             </CircleButton>
           </div>
-        </motion.div>
+        </m.div>
       )}
 
       {/* Main Button */}

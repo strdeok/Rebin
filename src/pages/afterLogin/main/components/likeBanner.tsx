@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function LikeBanner({ like }: { like: boolean }) {
@@ -17,7 +17,7 @@ export default function LikeBanner({ like }: { like: boolean }) {
   return (
     <AnimatePresence>
       {visible && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 50 }}
@@ -25,7 +25,7 @@ export default function LikeBanner({ like }: { like: boolean }) {
           className="fixed z-50 w-80 h-10 left-1/2 -translate-x-1/2 bg-black rounded-lg text-white text-center py-2"
         >
           내가 찜한 가게에 추가되었습니다.
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

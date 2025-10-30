@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useEffect, useState, type Dispatch } from "react";
 import type { Poi } from "../../../../types/poi";
 import OutlineHeart from "../../../../assets/icons/OutlineHeart.svg?react";
@@ -60,7 +60,7 @@ export default function PlaceInfo({
 
   if (isInfoVisible) {
     return (
-      <motion.div
+      <m.div
         initial={{ y: 200 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.1 }}
@@ -127,7 +127,7 @@ export default function PlaceInfo({
             </>
           )}
         </div>
-      </motion.div>
+      </m.div>
     );
   }
 }
