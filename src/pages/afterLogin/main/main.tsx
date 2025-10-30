@@ -1,27 +1,37 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import LikeBanner from "./components/likeBanner";
 import GoogleMap from "./components/map/googleMap";
 import PlaceInfo from "./components/placeInfo";
 import SideController from "./components/sideController";
-import type { Poi } from "../../../types/poi";
 import { getLikeLocation } from "../../../utils/firebase/manageLikeLocations";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../../firebase";
 import { useLocation } from "react-router-dom";
-import { useUserLocation } from "../../../state/nowLocationContext";
+import { useMapStore } from "../../../store/store";
+import { useShallow } from "zustand/shallow";
 
 export default function Main() {
-  const [like, setLike] = useState(false);
-  const [likeLocation, setLikeLocation] = useState<Poi[]>([]);
-  const [isInfoVisible, setIsInfoVisible] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState<Poi | null>(null);
-  const [isCenter, setIsCenter] = useState(false);
-  const [showPath, setShowPath] = useState(false);
-  const [showLikedOnly, setShowLikedOnly] = useState(false);
+  const {
+    like,
+    setLikeLocation,
+    setIsInfoVisible,
+    setSelectedLocation,
+    setIsCenter,
+    setShowPath,
+    fetchUserLocation,
+  } = useMapStore(
+    useShallow((state) => ({
+      like: state.like,
+      setLikeLocation: state.setLikeLocation,
+      setIsInfoVisible: state.setIsInfoVisible,
+      setSelectedLocation: state.setSelectedLocation,
+      setIsCenter: state.setIsCenter,
+      setShowPath: state.setShowPath,
+      fetchUserLocation: state.fetchUserLocation,
+    }))
+  );
 
   const location = useLocation();
-
-  const userLocation = useUserLocation();
 
   useEffect(() => {
     const isLikePlace = async () => {
@@ -32,11 +42,12 @@ export default function Main() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         isLikePlace();
+        fetchUserLocation();
       }
     });
 
     return () => unsubscribe(); // 컴포넌트 언마운트 시 정리
-  }, []);
+  }, [fetchUserLocation, setLikeLocation]);
 
   useEffect(() => {
     if (!like) return; // like가 업데이트 될 때
@@ -58,37 +69,12 @@ export default function Main() {
 
   return (
     <main className="w-full h-full">
-      <LikeBanner like={like} />
-      <GoogleMap
-      userLocation={userLocation}
-        isCenter={isCenter}
-        setIsCenter={setIsCenter}
-        selectedLocation={selectedLocation}
-        isInfoVisible={isInfoVisible}
-        setIsInfoVisible={setIsInfoVisible}
-        likeLocation={likeLocation}
-        setSelectedLocation={setSelectedLocation}
-        showPath={showPath}
-        showLikedOnly={showLikedOnly}
-      />
+      <LikeBanner  />
+      <GoogleMap />
 
-      <SideController
-        setIsCenter={setIsCenter}
-        showLikedOnly={showLikedOnly}
-        setShowLikedOnly={setShowLikedOnly}
-      />
+      <SideController />
 
-      <PlaceInfo
-        like={like}
-        setLike={setLike}
-        likeLocation={likeLocation}
-        setLikeLocation={setLikeLocation}
-        isInfoVisible={isInfoVisible}
-        selectedLocation={selectedLocation}
-        showPath={showPath}
-        setShowPath={setShowPath}
-        userLocation={userLocation}
-      />
+      <PlaceInfo />
     </main>
   );
 }
