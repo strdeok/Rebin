@@ -13,7 +13,7 @@
     "@googlemaps/markerclusterer": "^2.5.3",
     "@tailwindcss/vite": "^4.1.5",
     "@vis.gl/react-google-maps": "^1.5.2",
-    "axios": "^1.9.0",
+    "axios": "^1.13.2",
     "dayjs": "^1.11.13",
     "firebase": "^11.9.0",
     "framer-motion": "^12.11.0",
@@ -21,14 +21,13 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-draggable": "^4.4.6",
-    "react-router-dom": "^7.6.0",
-    "vite-plugin-svgr": "^4.3.0"
+    "react-router-dom": "^7.6.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
     "@types/google.maps": "^3.58.1",
-    "@types/react": "^19.1.2",
-    "@types/react-dom": "^19.1.2",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.4.1",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.25.0",
@@ -41,7 +40,7 @@
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
     "vite": "^6.3.5",
-    "vite-plugin-svgr": "^4.3.0"
+    "vite-plugin-svgr": "^4.5.0"
   },
   "msw": {
     "workerDirectory": [
