@@ -1,15 +1,11 @@
-import {
-  useEffect,
-  useState,
-  type Dispatch,
-  type JSX,
-  type SetStateAction,
-} from "react";
+import React, { useEffect, useState, useCallback, type JSX } from "react";
 import Bottle from "../../../../../assets/icons/Bottle.svg?react";
 import Battery from "../../../../../assets/icons/Battery.svg?react";
 import Pill from "../../../../../assets/icons/Pill.svg?react";
 import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
 import type { Poi } from "../../../../../types/poi";
+import { useMapStore } from "../../../../../store/store";
+import { useShallow } from "zustand/shallow";
 
 const categoryIcons: Record<string, JSX.Element> = {
   battery: <Battery fill="white" />,
@@ -17,61 +13,69 @@ const categoryIcons: Record<string, JSX.Element> = {
   pill: <Pill fill="white" />,
 };
 
-export default function Markers({
-  pois,
-  selectedLocation,
-  isInfoVisible,
-  setIsInfoVisible,
-  likeLocation,
-  setSelectedLocation,
-  showPath,
-}: {
-  pois: Poi[];
-  selectedLocation: Poi | null;
-  setSelectedLocation: Dispatch<SetStateAction<Poi | null>>;
-  isInfoVisible: boolean;
-  setIsInfoVisible: Dispatch<SetStateAction<boolean>>;
-  likeLocation: Poi[] | undefined;
-  showPath: boolean;
-}) {
-  const [zoom, setZoom] = useState<number | undefined>();
+const MemoizedMarker = React.memo(AdvancedMarker);
+
+export default function Markers({ pois }: { pois: Poi[] }) {
+  const { likeLocation, selectedLocation, isInfoVisible, showPath, setSelectedLocation, setIsInfoVisible } =
+    useMapStore(
+      useShallow((state) => ({
+        likeLocation: state.likeLocation,
+        selectedLocation: state.selectedLocation,
+        isInfoVisible: state.isInfoVisible,
+        showPath: state.showPath,
+        setSelectedLocation: state.setSelectedLocation,
+        setIsInfoVisible: state.setIsInfoVisible,
+      }))
+    );
+
   const map = useMap();
+  const [visiblePois, setVisiblePois] = useState<Poi[]>([]);
+
+  const updateVisibleMarkers = useCallback(() => {
+    if (!map || pois.length === 0) return;
+
+    const currentZoom = map.getZoom();
+
+    if (currentZoom !== undefined && currentZoom <= 15) {
+      setVisiblePois([]);
+      return;
+    }
+
+    const bounds = map.getBounds();
+    if (!bounds) return;
+
+    const filteredPois = pois.filter((poi) => {
+      return bounds.contains(poi.location);
+    });
+
+    setVisiblePois(filteredPois);
+  }, [map, pois]);
 
   useEffect(() => {
     if (!map) return;
 
-    const updateZoom = () => {
-      const currentZoom = map.getZoom();
-      if (currentZoom !== undefined) {
-        setZoom(currentZoom);
-      }
-    };
+    updateVisibleMarkers();
 
-    updateZoom(); // 초기 줌 설정
-
-    const listener = map.addListener("zoom_changed", updateZoom);
+    const listener = map.addListener("idle", updateVisibleMarkers);
 
     return () => {
       google.maps.event.removeListener(listener);
     };
-  }, [map]);
+  }, [map, updateVisibleMarkers]);
 
-  if (!showPath) {
-    if (zoom !== undefined && zoom <= 15) return null; // 줌 나가면 없앰
-  }
+  const poisToRender = showPath
+    ? visiblePois.filter((poi) => poi.name === selectedLocation?.name)
+    : visiblePois;
 
   return (
     <>
-      {(showPath
-        ? pois.filter((poi) => poi.name === selectedLocation?.name)
-        : pois
-      ).map((poi: Poi, i: number) => {
+      {poisToRender.map((poi: Poi) => {
         const isLiked = likeLocation?.some((item) => item.name === poi.name);
         const isSelected = selectedLocation?.name === poi.name && isInfoVisible;
 
         return (
-          <AdvancedMarker
-            key={i}
+          <MemoizedMarker
+            key={poi.name}
             position={poi.location}
             onClick={() => {
               setSelectedLocation(poi);
@@ -89,7 +93,7 @@ export default function Markers({
                 {categoryIcons[poi.category]}
               </span>
             </div>
-          </AdvancedMarker>
+          </MemoizedMarker>
         );
       })}
     </>

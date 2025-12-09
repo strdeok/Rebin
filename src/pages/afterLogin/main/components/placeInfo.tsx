@@ -7,56 +7,27 @@ import {
   addLikeLocation,
   removeLikeLocation,
 } from "../../../../utils/firebase/manageLikeLocations";
-import { getWalkingDistance } from "../../../../api/getWalkingTimeDistance";
+import { useMapStore } from "../../../../store/store";
+import { useFetchLocationInfo } from "../../../../hooks/useFetchLocationInfo";
+import Loading from "../../../../components/loading";
 
-export default function PlaceInfo({
-  like,
-  setLike,
-  likeLocation,
-  setLikeLocation,
-  isInfoVisible,
-  selectedLocation,
-  showPath,
-  setShowPath,
-  userLocation,
-}: {
-  like: boolean;
-  setLike: Dispatch<React.SetStateAction<boolean>>;
-  likeLocation: Poi[];
-  setLikeLocation: Dispatch<React.SetStateAction<Poi[]>>;
-  isInfoVisible: boolean;
-  selectedLocation: Poi | null;
-  showPath: boolean;
-  setShowPath: Dispatch<React.SetStateAction<boolean>>;
-  userLocation: { lat: number; lng: number };
-}) {
+export default function PlaceInfo({}: {}) {
+  const {
+    likeLocation,
+    selectedLocation,
+    isInfoVisible,
+    setShowPath,
+    setLike,
+    setLikeLocation,
+    showPath,
+    like,
+  } = useMapStore();
   const likeLocationNames = likeLocation.map((item) => item);
-  const [routeInfo, setRouteInfo] = useState<{
-    distance: number;
-    duration: number;
-  } | null>(null);
 
-  useEffect(() => {
-    if (!selectedLocation) return;
-    const info = async () => {
-      try {
-        const result = await getWalkingDistance(
-          [userLocation.lng, userLocation.lat],
-          [selectedLocation?.location.lng, selectedLocation?.location.lat]
-        );
-        const data = result.routes[0].summary;
-        console.log(data);
-        setRouteInfo({
-          distance: data.distance,
-          duration: data.duration,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const { data: locationInfo, isLoading } = useFetchLocationInfo();
 
-    info();
-  }, [selectedLocation?.name]);
+  const distance = locationInfo?.routes[0]?.summary?.distance;
+  const duration = locationInfo?.routes[0]?.summary?.duration;
 
   if (isInfoVisible) {
     return (
@@ -66,8 +37,9 @@ export default function PlaceInfo({
         transition={{ duration: 0.1 }}
         className="absolute bottom-0 z-50 right-0 w-full h-64 bg-white rounded-[32px_32px_0px_0px] overflow-hidden shadow-md"
       >
-        {likeLocationNames.find((item) => item.name === selectedLocation?.name) ||
-        like ? (
+        {likeLocationNames.find(
+          (item) => item.name === selectedLocation?.name
+        ) || like ? (
           <FilledHeart
             fill="red"
             className="absolute w-9 h-9 top-[30px] right-8"
@@ -91,10 +63,13 @@ export default function PlaceInfo({
 
         <div className="mt-8 ml-11  font-semibold text-black text-2xl w-65">
           {selectedLocation?.name}
-          <span className="font-normal text-[#7d8c8b] text-base tracking-[0] leading-[normal] whitespace-nowrap ml-2">
-            {routeInfo?.distance?.toFixed(0)}m (약{" "}
-            {((routeInfo?.duration ?? 0) / 60).toFixed(0)}분)
-          </span>
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <span className="font-normal text-[#7d8c8b] text-base tracking-[0] leading-[normal] whitespace-nowrap ml-2">
+              {distance?.toFixed(0)}m (약 {((duration ?? 0) / 60).toFixed(0)}분)
+            </span>
+          )}
         </div>
 
         <div className="mt-4 ml-11 font-normal">

@@ -1,4 +1,4 @@
-import { useEffect, type Dispatch, type JSX, type SetStateAction } from "react";
+import { useEffect, type JSX } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { customClusterRenderer } from "./customMarkerClusterer";
@@ -8,6 +8,7 @@ import Bottle from "../../../../../assets/icons/Bottle.svg?react";
 import Battery from "../../../../../assets/icons/Battery.svg?react";
 import Pill from "../../../../../assets/icons/Pill.svg?react";
 import ReactDOMServer from "react-dom/server";
+import { useMapStore } from "../../../../../store/store";
 
 const categoryIcons: Record<string, JSX.Element> = {
   battery: <Battery fill="white" />,
@@ -36,14 +37,11 @@ function createCustomMarkerContent(poi: Poi): HTMLElement {
 
 export default function ClusteredMarkers({
   pois,
-  setSelectedLocation,
-  setIsInfoVisible,
 }: {
   pois: Poi[];
-  setSelectedLocation: Dispatch<SetStateAction<Poi | null>>;
-  setIsInfoVisible: Dispatch<SetStateAction<boolean>>;
 }) {
   const map = useMap();
+  const { setSelectedLocation, setIsInfoVisible } = useMapStore();
 
   useEffect(() => {
     if (!map) return;
