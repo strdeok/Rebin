@@ -4,6 +4,10 @@
 
 [서비스 바로가기](https://rebin-e8883.firebaseapp.com/) · [트러블슈팅](./TROUBLESHOOTING.md)
 
+## 서비스 화면
+
+![Re-bin 온보딩 화면](./docs/images/home.png)
+
 ## 프로젝트 설명
 
 **개인 프로젝트 | 2025.04 - 2025.06**
